@@ -1,0 +1,9 @@
+# IDEs
+.idea
+.code
+
+# System
+.DS_Store
+
+# Node
+node_modules
