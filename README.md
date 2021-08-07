@@ -68,8 +68,6 @@ priceTooltip$.end();
 - [X] `value`
 - [X] `derivedValue`
 - [X] `sub` on pub/err/end
-- [ ] ?? `effect`
-- [ ] ?? Allow derivation from multiple sources
 - [ ] Better types and type names
 - [ ] Tests
 - [ ] Optimization
