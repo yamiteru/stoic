@@ -8,15 +8,15 @@ A general purpose synchronous (functional) reactive library with a simple and op
 // Stream
 const clickOnPrice$ = stream<number>();
 const clickedPriceWithVat$ = derivedStream<number>(
-    (n: number) => n > 0 ? Math.round(n * 1.21): NONE,
-    clickOnPrice$
+    clickOnPrice$,
+    (n) => n > 0 ? Math.round(n * 1.21): NONE
 );
 
 // Value
 const numberOfClicks$ = value<number>(0);
 const priceTooltip$ = derivedValue<string>(
-    (value: number) => `This product costs ${value}Kč with 21% VAT.`,
-    clickedPriceWithVat$
+    clickedPriceWithVat$,
+    (value: number) => `This product costs ${value}Kč with 21% VAT.`
 );
 
 // Subscribe
