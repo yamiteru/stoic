@@ -1,16 +1,20 @@
-import subSimple from "../help/subSimple";
-import pubSimple from "../help/pubSimple";
-import delSimple from "../help/delSimple";
 import {Stream} from "../types/primitives";
-import {SubscriberSet} from "../types/help";
+import {EndSubscribers, ErrSubscribers, PubSubscribers} from "../types/help";
+import sub from "../help/sub";
+import pub from "../help/pub";
+import end from "../help/end";
 
 const stream = <T>(): Stream<T> => {
-    const subscribers: SubscriberSet<T> = new Set();
+    const pubSubscribers: PubSubscribers<T> = new Set();
+    const errSubscribers: ErrSubscribers = new Set();
+    const endSubscribers: EndSubscribers = new Set();
 
     return {
-        sub: subSimple<T>(subscribers),
-        pub: pubSimple<T>(subscribers),
-        del: delSimple<T>(subscribers)
+        pub: pub(pubSubscribers),
+        end: end<T>(pubSubscribers, errSubscribers, endSubscribers),
+        onPub: sub<T>(pubSubscribers),
+        onErr: sub<string>(errSubscribers),
+        onEnd: sub<undefined>(endSubscribers),
     };
 };
 

@@ -1,15 +1,13 @@
-import {Maybe} from "./core";
-import {Comparator, Computation, Source} from "./help";
-import {Del, Get, Pub, Sub} from "./methods";
+import {End, Get, OnEnd, OnErr, OnPub, Pub} from "./methods";
 
-export type Stream<T> = Sub<T> & Pub<T> & Del<T>;
-declare function stream<T = any>(): Stream<T>;
+export type Observable<T> = OnPub<T> & OnErr & OnEnd & End<T>;
 
-export type DerivedStream<T> = Sub<T> & Del<T>;
-declare function derivedStream<T = any>(callback: Computation<T>, source: Source): DerivedStream<T>;
+export type Publishable<T> = Pub<T> & Observable<T>;
 
-export type Value<T> = Sub<T> & Pub<T> & Get<T> & Del<T>;
-declare function value<T = any>(initialValue?: Maybe<T>, comparator?: Comparator): Value<T>;
+export type Stream<T> = Publishable<T>;
 
-export type DerivedValue<T> = Sub<T> & Get<T> & Del<T>;
-declare function derivedValue<T = any>(callback: Computation<T>, source: Source, comparator?: Comparator): DerivedValue<T>;
+export type DerivedStream<T> = Observable<T>;
+
+export type Value<T> = Get<T> & Publishable<T>;
+
+export type DerivedValue<T> = Get<T> & Observable<T>;

@@ -20,15 +20,19 @@ const priceTooltip$ = derivedValue<string>(
 );
 
 // Subscribe
-clickOnPrice$.sub(() =>
+clickOnPrice$.onPub(() =>
     numberOfClicks$.pub((numberOfClicks$.get() || 0) + 1)
 );
 
+clickOnPrice$.onEnd(() =>
+    console.log("You can no more click on price")
+);
+
 // This could also be written like this:
-// const priceTooltipUnsubscribe = priceTooltip$.sub(console.log);
+// const priceTooltipUnsubscribe = priceTooltip$.onPub(console.log);
 // This allows for unsubscribing individual subscribers
 // as opposed to .del which unsubscribes all subscribers
-priceTooltip$.sub(console.log);
+priceTooltip$.onPub(console.log);
 
 // Publish
 clickOnPrice$.pub(999);
@@ -43,16 +47,17 @@ setTimeout(() => {
     console.log(`Last tooltip: "${priceTooltip$.get()}"`);
 },100);
 
-// Unsubscribe
-clickOnPrice$.del();
-clickedPriceWithVat$.del();
-numberOfClicks$.del();
-priceTooltip$.del();
+// End
+clickOnPrice$.end();
+clickedPriceWithVat$.end();
+numberOfClicks$.end();
+priceTooltip$.end();
 
 // Console
 // This product costs 1209Kč with 21% VAT.
 // This product costs 59Kč with 21% VAT.
 // This product costs 434Kč with 21% VAT.
+// You can no more click on price
 // Number of clicks: 5
 // Last tooltip: "This product costs 434Kč with 21% VAT."
 ```
@@ -62,9 +67,9 @@ priceTooltip$.del();
 - [X] `derivedStream`
 - [X] `value`
 - [X] `derivedValue`
+- [X] `sub` on pub/err/end
 - [ ] ?? `effect`
 - [ ] ?? Allow derivation from multiple sources
-- [ ] `sub` on pub/err/end
 - [ ] Better types and type names
 - [ ] Tests
 - [ ] Optimization

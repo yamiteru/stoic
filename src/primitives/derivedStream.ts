@@ -1,14 +1,14 @@
 import stream from "./stream";
-import delDerived from "../help/delDerived";
+import endDerived from "../help/endDerived";
 import {DerivedStream} from "../types/primitives";
 import {Computation, Source} from "../types/help";
 
 const derivedStream = <T>(callback: Computation<T>, source: Source): DerivedStream<T> => {
-    const { sub, pub, del } = stream<T>();
+    const { pub, end, onPub, onErr, onEnd } = stream<T>();
 
     return {
-        sub,
-        del: delDerived<T>(source, callback, pub, del)
+        end: endDerived<T>(source, callback, pub, end),
+        onPub, onErr, onEnd,
     };
 };
 
