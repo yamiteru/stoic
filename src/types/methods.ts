@@ -1,8 +1,8 @@
-import {Maybe} from "./core";
 import {Subscriber} from "./help";
+import {Maybe} from "./core";
 
 export type UnsubFn = () => void;
-export type PubFn<T> = (value?: Maybe<T>) => void;
+export type PubFn<T> = (value?: T) => void;
 export type GetFn<T> = () => Maybe<T>;
 export type EndFn = () => void;
 
