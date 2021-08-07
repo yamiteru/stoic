@@ -10,7 +10,7 @@ const stream = <T>(): Stream<T> => {
     const endSubscribers: EndSubscribers = new Set();
 
     return {
-        pub: pub(pubSubscribers),
+        pub: pub(pubSubscribers, errSubscribers),
         end: end<T>(pubSubscribers, errSubscribers, endSubscribers),
         onPub: sub<T>(pubSubscribers),
         onErr: sub<string>(errSubscribers),

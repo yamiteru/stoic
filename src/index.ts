@@ -19,13 +19,18 @@ const priceTooltip$ = derivedValue<string>(
 );
 
 // Subscribe
-clickOnPrice$.onPub(() =>
-    numberOfClicks$.pub((numberOfClicks$.get() || 0) + 1)
-);
+clickOnPrice$.onPub((n) => {
+    numberOfClicks$.pub((numberOfClicks$.get() || 0) + 1);
+
+    // Manually simulate an error in a subscriber
+    if(n && n <= 0) throw new Error("ERROR: Number should be > 0");
+});
 
 clickOnPrice$.onEnd(() =>
     console.log("You can no more click on price")
 );
+
+clickOnPrice$.onErr(console.log);
 
 // This could also be written like this:
 // const priceTooltipUnsubscribe = priceTooltip$.onPub(console.log);
