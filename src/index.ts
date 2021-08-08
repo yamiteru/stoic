@@ -8,7 +8,7 @@ import derivedValue from "./primitives/derivedValue";
 const clickOnPrice$ = stream<number>();
 const clickedPriceWithVat$ = derivedStream<number>(
     clickOnPrice$,
-    (n) => n > 0 ? Math.round(n * 1.21): NONE
+    (n: number) => n > 0 ? Math.round(n * 1.21): NONE
 );
 
 // Value

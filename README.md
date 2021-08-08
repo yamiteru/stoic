@@ -75,11 +75,11 @@ priceTooltip$.end();
 - [X] `value`
 - [X] `derivedValue`
 - [X] `sub` on pub/err/end
-- [ ] Better types and type names
+- [X] Better types and type names
+- [ ] Docs
 - [ ] Tests
 - [ ] Optimization
 - [ ] Benchmarks
-- [ ] Docs
 - [ ] In-code Docs for better intellisense
 - [ ] Examples
 - [ ] Publish on NPM
