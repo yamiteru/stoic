@@ -49,7 +49,7 @@ const addToCart$ = stream<Product>();
 Returns `end`, `onPub`, `onErr`, `onEnd`.
 
 ``` typescript
-const cartItem$ = derivedStream<CartItem>(addToCart$, (product: Product) => { 
+const cartItem$ = derivedStream<Product, CartItem>(addToCart$, (product) => { 
     return {
         id: uuid(),
         name: product.name,
@@ -70,7 +70,7 @@ const cartSumPrice$ = value<number>(0);
 Returns `get`, `end`, `onPub`, `onErr`, `onEnd`.
 
 ``` typescript
-const cartFreeShipping$ = derivedValue<boolean>(cartSumPrice$, (price: number) => {
+const cartFreeShipping$ = derivedValue<number, boolean>(cartSumPrice$, (price) => {
     return price > 1000;
 });
 ```
