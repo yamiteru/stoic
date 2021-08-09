@@ -1,73 +1,143 @@
 # Stoic
-_This library is in Alpha right now._
+Tiny, fast, simple and strictly typed low-level TypeScript reactive library. 
 
-A general purpose synchronous (functional) reactive library with a simple and open API, tiny size (< 1Kb) and (hopefully) unmatched performance.
 
-## Example
-```typescript
-// Stream
-const clickOnPrice$ = stream<number>();
-const clickedPriceWithVat$ = derivedStream<number>(
-    clickOnPrice$,
-    (n) => n > 0 ? Math.round(n * 1.21): NONE
-);
 
-// Value
-const numberOfClicks$ = value<number>(0);
-const priceTooltip$ = derivedValue<string>(
-    clickedPriceWithVat$,
-    (value: number) => `This product costs ${value}Kč with 21% VAT.`
-);
+## Concepts
 
-// Subscribe
-clickOnPrice$.onPub((n) => {
-    numberOfClicks$.pub((numberOfClicks$.get() || 0) + 1);
+### Observable
+Every reactive primitive is in an essence an Observable. Observable lets you listen to its events. In another words when you subscribe to an observable you can then react when something happens and/or changes inside of that very observable.
 
-    // Manually simulate an error in a subscriber
-    if(n && n <= 0) throw new Error("ERROR: Number should be > 0");
-});
+Every observable in Stoic has `onPub`, `onErr` and `onEnd` subscribe methods.
 
-clickOnPrice$.onEnd(() =>
-    console.log("You can no more click on price")
-);
+### Lifecycle
+A Life of a reactive primitive starts once the primitive is created or after ending its previous life by calling `end` method. When a primitive reaches its end all subscribers that has been added to it in its previous life are removed. It essentially works as a reset. Or a reincarnation. Pick your poison. 
 
-clickOnPrice$.onErr(console.log);
+### Stream
+Stream acts a stateless proxy which passes data to all its subscribers. Data gets passed to the subscribers by calling `pub` method with the data that you want to pass. 
 
-// This could also be written like this:
-// const priceTooltipUnsubscribe = priceTooltip$.onPub(console.log);
-// This allows for unsubscribing individual subscribers
-// as opposed to .del which unsubscribes all subscribers
-priceTooltip$.onPub(console.log);
+Since stream is stateless you can access the current data only inside a subscriber. 
 
-// Publish
-clickOnPrice$.pub(999);
-clickOnPrice$.pub(-1259);
-clickOnPrice$.pub(49);
-clickOnPrice$.pub(-1);
-clickOnPrice$.pub(359);
+### Value
+Value is a stateful stream which takes an initial data and caches the last data every time the data changes. You can get the last data anywhere in the code by calling `get` method. 
 
-// Get
-setTimeout(() => {
-    console.log(`Number of clicks: ${numberOfClicks$.get()}`);
-    console.log(`Last tooltip: "${priceTooltip$.get()}"`);
-},100);
+Value also takes an optional comparator as the last argument which checks if the new data is different from the last data. If they are same then no new data gets passed throught. This means that subscribers are called only when the new and last data are different.
 
-// End
-clickOnPrice$.end();
-clickedPriceWithVat$.end();
-numberOfClicks$.end();
-priceTooltip$.end();
+Default comparator is `(a, b) => a !== b`.
 
-// Console
-// This product costs 1209Kč with 21% VAT.
-// ERROR: Number should be > 0
-// This product costs 59Kč with 21% VAT.
-// ERROR: Number should be > 0
-// This product costs 434Kč with 21% VAT.
-// You can no more click on price
-// Number of clicks: 5
-// Last tooltip: "This product costs 434Kč with 21% VAT."
+### Derivation
+Derived primitive takes an observable from which it gets the current data and passes it through a user defined computation. The computation can then transform the data. It has to return data back which is then passed to all its subscribers.
+
+Derived primitive takes its input by subscribing to the observable. The computation is basically just a subscriber passed to `onPub` of the observable with the only difference that it has to return data matching the type of the derived primitive.
+
+
+___
+
+
+## API
+
+### Primitives
+
+#### Stream 
+Returns `pub`, `end`, `onPub`, `onErr`, `onEnd`.
+
+``` typescript
+const addToCart$ = stream<Product>();
 ```
+
+#### derivedStream
+Returns `end`, `onPub`, `onErr`, `onEnd`.
+
+``` typescript
+const cartItem$ = derivedStream<CartItem>(addToCart$, (product: Product) => { 
+    return {
+        id: uuid(),
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+    };
+});
+```
+
+#### value
+Returns `pub`, `get`, `end`, `onPub`, `onErr`, `onEnd`.
+
+``` typescript
+const cartSumPrice$ = value<number>(0);
+```
+
+#### derivedValue
+Returns `get`, `end`, `onPub`, `onErr`, `onEnd`.
+
+``` typescript
+const cartFreeShipping$ = derivedValue<boolean>(cartSumPrice$, (price: number) => {
+    return price > 1000;
+});
+```
+
+### Actions
+
+#### pub
+Publishes data to all `onPub` subscribers.
+
+``` typescript
+addToCart$.pub({
+    name: "The Clean Code",
+    price: 350,
+});
+```
+
+#### get
+Returns the last cached data.
+
+``` typescript
+const sumPrice = cartSumPrice$.get();
+```
+
+#### end
+Ends the current life of a primitive.
+
+``` typescript
+cartFreeShipping$.end();
+```
+
+### Subscribers
+There are several inner events you can subscribe to inside a primitive. Every subscribtion returns a function which lets you unsubscribe the subscription. 
+
+All errors thrown in subscribers will be passed to `onErr` meaning they will not terminate the process. 
+
+#### onPub
+Subscribes to the data passed in `pub` action.
+
+``` typescript
+const unOnPub = addToCart$.onPub((product: Product) => {
+    slideCartIntoView();
+});
+```
+
+#### onErr
+Subscribes to errors thrown in other subscribers. Note that an error thrown in `onErr` will terminate the process.
+
+``` typescript
+const unOnErr = addToCart$.onErr((message) => {
+    showErrorMessage(message); 
+});
+```
+
+#### onEnd
+Subscribes to the end of the current life of a primitive triggered by `end` action.
+
+``` typescript
+const unOnEnd = primitive$.onEnd(() => {
+    unOnPub();
+    unOnErr();
+    unOnEnd();
+});
+```
+
+
+___
+
 
 ## Todo
 - [X] `stream`
@@ -76,7 +146,7 @@ priceTooltip$.end();
 - [X] `derivedValue`
 - [X] `sub` on pub/err/end
 - [X] Better types and type names
-- [ ] Docs
+- [X] Docs
 - [ ] Tests
 - [ ] Optimization
 - [ ] Benchmarks
@@ -84,6 +154,8 @@ priceTooltip$.end();
 - [ ] Examples
 - [ ] Publish on NPM
 
+
 ___
 
-Every help and/or idea is very welcomed 🙏
+
+Every idea, issue or discussion is welcomed 🙏 
