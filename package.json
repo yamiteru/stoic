@@ -1,13 +1,32 @@
 {
   "name": "stoic",
   "version": "0.0.1",
-  "description": "",
+  "description": "Tiny, fast, simple and strictly typed low-level TypeScript functional reactive library.",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "reactive",
+    "functional",
+    "performance",
+    "fast",
+    "typescript",
+    "javascript",
+    "observable",
+    "stream",
+    "event"
+  ],
+  "author": "Miroslav Vršecký",
+  "homepage": "https://github.com/the-yamiteru/stoic#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/the-yamiteru/stoic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/the-yamiteru/stoic/issues"
+  },
   "license": "MIT",
   "devDependencies": {
     "ts-node-dev": "^1.1.8",
