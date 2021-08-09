@@ -1,5 +1,5 @@
 # Stoic
-Tiny, fast, simple and strictly typed low-level TypeScript reactive library. 
+Tiny, fast, simple and strictly typed low-level TypeScript functional reactive library. 
 
 
 
