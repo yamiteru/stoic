@@ -49,14 +49,12 @@ const addToCart$ = stream<Product>();
 Returns `end`, `onPub`, `onErr`, `onEnd`.
 
 ``` typescript
-const cartItem$ = derivedStream<Product, CartItem>(addToCart$, (product) => { 
-    return {
-        id: uuid(),
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-    };
-});
+const cartItem$ = derivedStream<Product, CartItem>(addToCart$, (product) => ({
+    id: uuid(),
+    name: product.name,
+    price: product.price,
+    quantity: 1,
+ }));
 ```
 
 #### value
@@ -70,9 +68,9 @@ const cartSumPrice$ = value<number>(0);
 Returns `get`, `end`, `onPub`, `onErr`, `onEnd`.
 
 ``` typescript
-const cartFreeShipping$ = derivedValue<number, boolean>(cartSumPrice$, (price) => {
-    return price > 1000;
-});
+const cartFreeShipping$ = derivedValue<number, boolean>(cartSumPrice$, (price) =>
+    price > 1000;
+);
 ```
 
 ### Actions
@@ -110,7 +108,7 @@ All errors thrown in subscribers will be passed to `onErr` meaning they will not
 Subscribes to the data passed in `pub` action.
 
 ``` typescript
-const unOnPub = addToCart$.onPub((product: Product) => {
+const unOnPub = addToCart$.onPub((product) => {
     slideCartIntoView();
 });
 ```
