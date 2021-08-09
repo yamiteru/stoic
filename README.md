@@ -30,6 +30,7 @@ Derived primitive takes an observable from which it gets the current data and pa
 
 Derived primitive takes its input by subscribing to the observable. The computation is basically just a subscriber passed to `onPub` of the observable with the only difference that it has to return data matching the type of the derived primitive.
 
+Derived primitive is curried. In the first call you define the source observable. In the second call you define the computation. This let's you omit the type of either input or output and infer the type from usage.
 
 ___
 
@@ -49,13 +50,28 @@ const addToCart$ = stream<Product>();
 Returns `end`, `onPub`, `onErr`, `onEnd`.
 
 ``` typescript
-const cartItem$ = derivedStream<Product, CartItem>(addToCart$, (product) => ({
-    id: uuid(),
-    name: product.name,
-    price: product.price,
-    quantity: 1,
- }));
+const cartItem$ = derivedStream<Product>(addToCart$)<CartItem>(
+    (product) => ({
+        id: uuid(),
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+    }));
 ```
+
+Or a simpler version where input gets inferred from the observable passed into the first curried function:
+
+``` typescript
+const cartItem$ = derivedStream(addToCart$)<CartItem>(
+    (product) => ({
+        id: uuid(),
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+    }));
+```
+
+This also applies to `derivedValue`.
 
 #### value
 Returns `pub`, `get`, `end`, `onPub`, `onErr`, `onEnd`.
@@ -68,9 +84,8 @@ const cartSumPrice$ = value<number>(0);
 Returns `get`, `end`, `onPub`, `onErr`, `onEnd`.
 
 ``` typescript
-const cartFreeShipping$ = derivedValue<number, boolean>(cartSumPrice$, (price) =>
-    price > 1000;
-);
+const cartFreeShipping$ = derivedValue<number>(cartSumPrice$)<boolean>(
+    (price) => price > 1000);
 ```
 
 ### Actions
