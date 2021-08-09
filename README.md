@@ -21,7 +21,7 @@ Since stream is stateless you can access the current data only inside a subscrib
 ### Value
 Value is a stateful stream which takes an initial data and caches the last data every time the data changes. You can get the last data anywhere in the code by calling `get` method. 
 
-Value also takes an optional comparator as the last argument which checks if the new data is different from the last data. If they are same then no new data gets passed throught. This means that subscribers are called only when the new and last data are different.
+Value also takes an optional comparator as the last argument which checks if the new data is different from the last data. If they are same then no new data gets passed through. This means that subscribers are called only when the new and last data are different.
 
 Default comparator is `(a, b) => a !== b`.
 
