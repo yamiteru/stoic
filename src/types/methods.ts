@@ -2,18 +2,18 @@ import {Subscriber} from "./help";
 import {Maybe} from "./core";
 
 export type UnsubFn = () => void;
-export type PubFn<T> = (value?: T) => void;
-export type GetFn<T> = () => Maybe<T>;
+export type PubFn<Output> = (data?: Output) => void;
+export type GetFn<Output> = () => Maybe<Output>;
 export type EndFn = () => void;
 
-export type OnPubFn<T> = (callback: Subscriber<T>) => UnsubFn;
+export type OnPubFn<Output> = (callback: Subscriber<Output>) => UnsubFn;
 export type OnErrFn = (callback: Subscriber<string>) => UnsubFn;
 export type OnEndFn = (callback: Subscriber<undefined>) => UnsubFn;
 
-export type Pub<T> = { pub: PubFn<T> };
-export type Get<T> = { get: GetFn<T> };
-export type End<T> = { end: EndFn };
+export type Pub<Output> = { pub: PubFn<Output> };
+export type Get<Output> = { get: GetFn<Output> };
+export type End<Output> = { end: EndFn };
 
-export type OnPub<T> = { onPub: OnPubFn<T> };
+export type OnPub<Output> = { onPub: OnPubFn<Output> };
 export type OnErr = { onErr: OnErrFn };
 export type OnEnd = { onEnd: OnEndFn };

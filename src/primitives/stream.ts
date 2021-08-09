@@ -4,15 +4,15 @@ import sub from "../help/sub";
 import pub from "../help/pub";
 import end from "../help/end";
 
-const stream = <T>(): Stream<T> => {
-    const pubSubscribers: PubSubscribers<T> = new Set();
+const stream = <Output>(): Stream<Output> => {
+    const pubSubscribers: PubSubscribers<Output> = new Set();
     const errSubscribers: ErrSubscribers = new Set();
     const endSubscribers: EndSubscribers = new Set();
 
     return {
         pub: pub(pubSubscribers, errSubscribers),
-        end: end<T>(pubSubscribers, errSubscribers, endSubscribers),
-        onPub: sub<T>(pubSubscribers),
+        end: end<Output>(pubSubscribers, errSubscribers, endSubscribers),
+        onPub: sub<Output>(pubSubscribers),
         onErr: sub<string>(errSubscribers),
         onEnd: sub<undefined>(endSubscribers),
     };

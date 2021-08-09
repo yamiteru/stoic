@@ -1,11 +1,11 @@
-import {Comparator, CurrentValue} from "../types/help";
+import {Comparator, Current} from "../types/help";
 import {PubFn} from "../types/methods";
 
-const pubValue = <T>(
-    currentValue: CurrentValue<T>,
-    pub: PubFn<T>,
+const pubValue = <Output>(
+    current: Current<Output>,
+    pub: PubFn<Output>,
     comparator: Comparator = (a, b) => a !== b
-) => (value?: T) =>
-    comparator(currentValue._, value) && pub(currentValue._ = value);
+) => (data?: Output) =>
+    comparator(current._, data) && pub(current._ = data);
 
 export default pubValue;

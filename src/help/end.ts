@@ -3,8 +3,8 @@ import pub from "./pub";
 
 const CLEAR = "clear";
 
-const end = <T>(
-    pubSubscribers: PubSubscribers<T>,
+const end = <Output>(
+    pubSubscribers: PubSubscribers<Output>,
     errSubscribers: ErrSubscribers,
     endSubscribers: EndSubscribers
 ) => () => {

@@ -1,5 +1,5 @@
-import {CurrentValue} from "../types/help";
+import {Current} from "../types/help";
 
-const get = <T>(currentValue: CurrentValue<T>) => () => currentValue._;
+const get = <Output>(currentValue: Current<Output>) => () => currentValue._;
 
 export default get;

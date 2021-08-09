@@ -3,11 +3,11 @@ import endDerived from "../help/endDerived";
 import {DerivedStream} from "../types/primitives";
 import {Computation, Source} from "../types/help";
 
-const derivedStream = <T>(source: Source<any>, callback: Computation<any, T>): DerivedStream<T> => {
-    const { pub, end, onPub, onErr, onEnd } = stream<T>();
+const derivedStream = <Input, Output>(source: Source<Input>, callback: Computation<Input, Output>): DerivedStream<Output> => {
+    const { pub, end, onPub, onErr, onEnd } = stream<Output>();
 
     return {
-        end: endDerived<T>(source, callback, pub, end),
+        end: endDerived<Input, Output>(source, callback, pub, end),
         onPub, onErr, onEnd,
     };
 };

@@ -5,13 +5,13 @@ import {DerivedValue} from "../types/primitives";
 import {Comparator, Computation, Source} from "../types/help";
 import {Maybe} from "../types/core";
 
-const derivedValue = <T>(source: Source<any>, callback: Computation<any, T>, comparator?: Comparator): DerivedValue<T> => {
-    const initialValue = source.get && callback(source.get());
-    const { pub, get, end, onPub, onErr, onEnd } = value<T>(initialValue !== NONE ? initialValue as Maybe<T>: null, comparator);
+const derivedValue = <Input, Output>(source: Source<Input>, callback: Computation<Input, Output>, isDifferent?: Comparator): DerivedValue<Output> => {
+    const initialData = source.get && callback(source.get());
+    const { pub, get, end, onPub, onErr, onEnd } = value<Output>(initialData !== NONE ? initialData as Maybe<Output>: null, isDifferent);
 
     return {
         get,
-        end: endDerived<T>(source, callback, pub, end),
+        end: endDerived<Input, Output>(source, callback, pub, end),
         onPub, onErr, onEnd
     };
 };

@@ -1,13 +1,13 @@
 import {End, Get, OnEnd, OnErr, OnPub, Pub} from "./methods";
 
-export type Observable<T> = OnPub<T> & OnErr & OnEnd & End<T>;
+export type Observable<Output> = OnPub<Output> & OnErr & OnEnd & End<Output>;
 
-export type Publishable<T> = Pub<T> & Observable<T>;
+export type Publishable<Output> = Pub<Output> & Observable<Output>;
 
-export type Stream<T> = Publishable<T>;
+export type Stream<Output> = Publishable<Output>;
 
-export type DerivedStream<T> = Observable<T>;
+export type DerivedStream<Output> = Observable<Output>;
 
-export type Value<T> = Get<T> & Publishable<T>;
+export type Value<Output> = Get<Output> & Publishable<Output>;
 
-export type DerivedValue<T> = Get<T> & Observable<T>;
+export type DerivedValue<Output> = Get<Output> & Observable<Output>;
