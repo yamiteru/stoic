@@ -4,7 +4,7 @@ import sub from "../help/sub";
 import pub from "../help/pub";
 import end from "../help/end";
 
-const stream = <Output>(): Stream<Output> => {
+export const stream = <Output>(): Stream<Output> => {
     const pubSubscribers: PubSubscribers<Output> = new Set();
     const errSubscribers: ErrSubscribers = new Set();
     const endSubscribers: EndSubscribers = new Set();
@@ -17,5 +17,3 @@ const stream = <Output>(): Stream<Output> => {
         onEnd: sub<undefined>(endSubscribers),
     };
 };
-
-export default stream;

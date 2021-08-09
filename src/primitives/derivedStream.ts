@@ -1,9 +1,9 @@
-import stream from "./stream";
+import {stream} from "./stream";
 import endDerived from "../help/endDerived";
 import {DerivedStream} from "../types/primitives";
 import {Computation, Source} from "../types/help";
 
-const derivedStream = <Input, Output>(source: Source<Input>, callback: Computation<Input, Output>): DerivedStream<Output> => {
+export const derivedStream = <Input, Output>(source: Source<Input>, callback: Computation<Input, Output>): DerivedStream<Output> => {
     const { pub, end, onPub, onErr, onEnd } = stream<Output>();
 
     return {
@@ -11,5 +11,3 @@ const derivedStream = <Input, Output>(source: Source<Input>, callback: Computati
         onPub, onErr, onEnd,
     };
 };
-
-export default derivedStream;
