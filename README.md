@@ -30,7 +30,7 @@ Derived primitive takes an observable from which it gets the current data and pa
 
 Derived primitive takes its input by subscribing to the observable. The computation is basically just a subscriber passed to `onPub` of the observable with the only difference that it has to return data matching the type of the derived primitive.
 
-Derived primitive is curried. In the first call you define the source observable. In the second call you define the computation. This let's you omit the type of either input or output and infer the type from usage.
+Derived primitive is curried (mainly because TS doesn't have partial type inference). In the first call you define the source observable. In the second call you define the computation. This let's you omit the type of either input or output and infer the type from usage.
 
 ___
 
