@@ -171,4 +171,10 @@ ___
 ___
 
 
+Oh is this library still too big and complex for you? Do you want the absolute core of this library in just 90 bytes? Sure, [there you go](https://gist.github.com/the-yamiteru/fee294c163f1128d15b37edcd04a4902).
+
+
+___
+
+
 Every idea, issue or discussion is welcomed 🙏 
