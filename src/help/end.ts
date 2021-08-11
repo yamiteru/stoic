@@ -1,14 +1,14 @@
-import {EndSubscribers, ErrSubscribers, PubSubscribers} from "../types/help";
+import {EndSubscribers, ErrSubscribers, PubRequiredSubscribers} from "../types/help";
 import pub from "./pub";
 
 const CLEAR = "clear";
 
 const end = <Output>(
-    pubSubscribers: PubSubscribers<Output>,
+    pubSubscribers: PubRequiredSubscribers<Output>,
     errSubscribers: ErrSubscribers,
     endSubscribers: EndSubscribers
 ) => () => {
-    pub(endSubscribers)();
+    pub(endSubscribers)(undefined);
     pubSubscribers[CLEAR]();
     errSubscribers[CLEAR]();
     endSubscribers[CLEAR]();

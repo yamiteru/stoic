@@ -26,11 +26,11 @@ Value also takes an optional comparator as the last argument which checks if the
 Default comparator is `(a, b) => a !== b`.
 
 ### Derivation
-Derived primitive takes an observable from which it gets the current data and passes it through a user defined computation. The computation can then transform the data. It has to return data back which is then passed to all its subscribers.
+Derived primitive takes a list of observables from which it gets a list of their current data and passes it through a user defined mapper. It caches the last data of the observables passed into it and doesn't take action unless all of them are valid meaning `data !== undefined`. The mapper has to return data back which is then passed to all the primitive's subscribers.
 
-Derived primitive takes its input by subscribing to the observable. The computation is basically just a subscriber passed to `onPub` of the observable with the only difference that it has to return data matching the type of the derived primitive.
+Derived primitive is curried (mainly because TS doesn't have partial type inference). In the first call you define the list of observables. In the second call you define the mapper. This let's you omit the type of either the observables or output and infer the type from usage.
 
-Derived primitive is curried (mainly because TS doesn't have partial type inference). In the first call you define the source observable. In the second call you define the computation. This let's you omit the type of either input or output and infer the type from usage.
+The types of observables and hence the types of arguments in the map are inferred automatically.
 
 ___
 
@@ -50,18 +50,6 @@ const addToCart$ = stream<Product>();
 Returns `end`, `onPub`, `onErr`, `onEnd`.
 
 ``` typescript
-const cartItem$ = derivedStream<Product>(addToCart$)<CartItem>(
-    (product) => ({
-        id: uuid(),
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-    }));
-```
-
-Or a simpler version where input gets inferred from the observable passed into the first curried function:
-
-``` typescript
 const cartItem$ = derivedStream(addToCart$)<CartItem>(
     (product) => ({
         id: uuid(),
@@ -70,8 +58,6 @@ const cartItem$ = derivedStream(addToCart$)<CartItem>(
         quantity: 1,
     }));
 ```
-
-This also applies to `derivedValue`.
 
 #### value
 Returns `pub`, `get`, `end`, `onPub`, `onErr`, `onEnd`.
@@ -84,8 +70,8 @@ const cartSumPrice$ = value<number>(0);
 Returns `get`, `end`, `onPub`, `onErr`, `onEnd`.
 
 ``` typescript
-const cartFreeShipping$ = derivedValue<number>(cartSumPrice$)<boolean>(
-    (price) => price > 1000);
+const cartFreeShipping$ = derivedValue(cartSumPrice$, vatPercentage$)<boolean>(
+    (price, vat) => (price * (1 + vat)) > 1000);
 ```
 
 ### Actions
@@ -115,7 +101,7 @@ cartFreeShipping$.end();
 ```
 
 ### Subscribers
-There are several inner events you can subscribe to inside a primitive. Every subscribtion returns a function which lets you unsubscribe the subscription. 
+There are several inner events you can subscribe to inside a primitive. Every subscription returns a function which lets you unsubscribe the subscription. 
 
 All errors thrown in subscribers will be passed to `onErr` meaning they will not terminate the process. 
 
@@ -160,6 +146,8 @@ ___
 - [X] `sub` on pub/err/end
 - [X] Better types and type names
 - [X] Docs
+- [X] Derive from multiple observables
+- [ ] Accumulate data over time
 - [ ] Tests
 - [ ] Optimization
 - [ ] Benchmarks

@@ -1,17 +1,20 @@
 import {value} from "./value";
-import {NONE} from "../constants";
 import endDerived from "../help/endDerived";
 import {DerivedValue} from "../types/primitives";
-import {Comparator, Computation, Source} from "../types/help";
-import {Maybe} from "../types/core";
+import {Comparator, MapCallback, Source, SourceTypes} from "../types/help";
+import derive from "../help/derive";
+import pubIfNotNone from "../help/pubIfNotNone";
 
-export const derivedValue = <Input>(source: Source<Input>) => <Output>(callback: Computation<Input, Output>, isDifferent?: Comparator): DerivedValue<Output> => {
-    const initialData = source.get && callback(source.get());
-    const { pub, get, end, onPub, onErr, onEnd } = value<Output>(initialData !== NONE ? initialData as Maybe<Output>: null, isDifferent);
+export const derivedValue = <Inputs extends Source<any>[]>(...inputs: Inputs) =>
+  <Output>(map: MapCallback<SourceTypes<Inputs>, Output>, isDifferent?: Comparator): DerivedValue<Output> => {
+    const { pub, get, end, onPub, onErr, onEnd } = value<Output>(null, isDifferent);
+    const { values, unsubs } = derive<Inputs, Output>(inputs, map, pub);
+
+    pubIfNotNone<SourceTypes<Inputs>, Output>(values, map, pub);
 
     return {
         get,
-        end: endDerived<Input, Output>(source, callback, pub, end),
+        end: endDerived(unsubs, end),
         onPub, onErr, onEnd
     };
 };

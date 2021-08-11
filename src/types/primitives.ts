@@ -1,8 +1,8 @@
-import {End, Get, OnEnd, OnErr, OnPub, Pub} from "./methods";
+import {End, Get, OnEnd, OnErr, OnPub, PubRequired} from "./methods";
 
 export type Observable<Output> = OnPub<Output> & OnErr & OnEnd & End<Output>;
 
-export type Publishable<Output> = Pub<Output> & Observable<Output>;
+export type Publishable<Output> = PubRequired<Output> & Observable<Output>;
 
 export type Stream<Output> = Publishable<Output>;
 

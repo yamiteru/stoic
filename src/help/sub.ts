@@ -1,7 +1,7 @@
-import {Subscriber, Subscribers} from "../types/help";
+import {SubscriberRequired, SubscribersRequired} from "../types/help";
 import {UnsubFn} from "../types/methods";
 
-const sub = <Output>(set: Subscribers<Output>) => (callback: Subscriber<Output>): UnsubFn =>
+const sub = <Output>(set: SubscribersRequired<Output>) => (callback: SubscriberRequired<Output>): UnsubFn =>
     (set.add(callback), () => set.delete(callback));
 
 export default sub;

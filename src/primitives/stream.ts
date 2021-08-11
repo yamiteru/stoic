@@ -1,11 +1,11 @@
 import {Stream} from "../types/primitives";
-import {EndSubscribers, ErrSubscribers, PubSubscribers} from "../types/help";
+import {EndSubscribers, ErrSubscribers, PubRequiredSubscribers} from "../types/help";
 import sub from "../help/sub";
 import pub from "../help/pub";
 import end from "../help/end";
 
 export const stream = <Output>(): Stream<Output> => {
-    const pubSubscribers: PubSubscribers<Output> = new Set();
+    const pubSubscribers: PubRequiredSubscribers<Output> = new Set();
     const errSubscribers: ErrSubscribers = new Set();
     const endSubscribers: EndSubscribers = new Set();
 
