@@ -1,18 +1,18 @@
-import {stream} from "./stream";
-import pubValue from "../help/pubValue";
-import {Comparator, Current} from "../types/help";
-import {Value} from "../types/primitives";
-import get from "../help/get";
-import {Maybe} from "../types/core";
+import { stream } from ".";
+import { Map, Maybe, Some, Subs } from "../types";
 
-export const value = <Output>(initialData: Maybe<Output>, isDifferent?: Comparator): Value<Output> => {
-    const current: Current<Output> = Object.seal({ _: initialData });
-    const { pub, end, onPub, onErr, onEnd } = stream<Output>();
+export const value = <I extends Some, O extends Some = I>(initial: O, map?: Maybe<Map<I, O, O>>, subs?: Maybe<Subs<O>>) => {
+    let latest: O = initial;
+    const stream$ = stream<I, O>(map ? (next) => map(next, latest): null, {
+        ...subs,
+        next: (v) => {
+            latest = v;
+            subs?.next && subs.next(latest);
+        }
+    });
 
     return {
-        pub: pubValue<Output>(current, pub, isDifferent),
-        get: get<Output>(current),
-        end,
-        onPub, onErr, onEnd
+        ...stream$,
+        get: () => latest
     };
 };

@@ -1,6 +1,7 @@
 # IDEs
 .idea
 .code
+.vscode
 
 # System
 .DS_Store

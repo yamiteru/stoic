@@ -1,20 +1,17 @@
-import {value} from "./value";
-import endDerived from "../help/endDerived";
-import {DerivedValue} from "../types/primitives";
-import {Comparator, MapCallback, Source, SourceTypes} from "../types/help";
-import derive from "../help/derive";
-import pubIfNotNone from "../help/pubIfNotNone";
+import { value } from ".";
+import derivedAny from "../help/derivedAny";
+import { Map, Maybe, Observable, ObservableOutputs, Some, Subs } from "../types";
 
-export const derivedValue = <Inputs extends Source<any>[]>(...inputs: Inputs) =>
-  <Output>(map: MapCallback<SourceTypes<Inputs>, Output>, isDifferent?: Comparator): DerivedValue<Output> => {
-    const { pub, get, end, onPub, onErr, onEnd } = value<Output>(null, isDifferent);
-    const { values, unsubs } = derive<Inputs, Output>(inputs, map, pub);
-
-    pubIfNotNone<SourceTypes<Inputs>, Output>(values, map, pub);
-
-    return {
-        get,
-        end: endDerived(unsubs, end),
-        onPub, onErr, onEnd
-    };
-};
+export const derivedValue = <
+    O extends Some,
+    A extends Observable<any, any>[],
+    I extends ObservableOutputs<A>,
+>(...props: [
+    initial: O,
+    observables: [...A],
+    map: Map<I, O, O>,
+    subs?: Maybe<Subs<O>>
+]) => derivedAny<O, A, I>(
+    value, 
+    ...props
+);

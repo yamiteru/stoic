@@ -1,11 +1,11 @@
 {
   "name": "stoic",
   "version": "0.0.1",
-  "description": "Tiny, fast, simple and strictly typed low-level TypeScript functional reactive library.",
+  "description": "Tiny, fast and simple TypeScript functional reactive library.",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "dev": "ts-node-dev --respawn --transpile-only workbench/index.ts"
   },
   "keywords": [
     "reactive",
@@ -29,7 +29,8 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^16.11.7",
     "ts-node-dev": "^1.1.8",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.4"
   }
 }
