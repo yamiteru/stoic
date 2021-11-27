@@ -6,7 +6,7 @@ export type Some = string | number | boolean | symbol | object | null;
 export type Noop = () => void;
 
 export type Stream = typeof stream;
-export type StreamInstance<I, O = I> = {
+export type StreamInstance<I = unknown, O = I> = {
   next: (v: I) => void,
   onNext: (cb: Callback<O, void>) => Noop,
   error: (v: string) => void,
@@ -15,9 +15,11 @@ export type StreamInstance<I, O = I> = {
   onEnd: (cb: Callback<void, void>) => Noop,
 };
 export type Value = typeof value;
-export type ValueInstance<I, O = I> = StreamInstance<I, O> & {
+export type ValueInstance<I = unknown, O = I> = StreamInstance<I, O> & {
   get: () => O,
 };
+
+export type ObservableInstance<I = unknown, O = I> = StreamInstance<I, O> | ValueInstance<I, O>;
 
 export type Map<I extends Some, O extends Some, T> = (next: I, latest: T) => O | undefined;
 export type Callback<T, O = void> = (value: T) => O;
